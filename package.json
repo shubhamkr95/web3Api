@@ -4,6 +4,7 @@
   "description": "A wallet api with authentication and token transfer between users",
   "main": "server.js",
   "scripts": {
+    "start": "nodemon server.js --ext js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
