@@ -15,5 +15,11 @@
   "bugs": {
     "url": "https://github.com/shubhamkr95/web3Api/issues"
   },
-  "homepage": "https://github.com/shubhamkr95/web3Api#readme"
+  "homepage": "https://github.com/shubhamkr95/web3Api#readme",
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "dotenv": "^16.0.0",
+    "ethers": "^5.6.2",
+    "express": "^4.17.3"
+  }
 }
