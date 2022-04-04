@@ -1,6 +1,4 @@
 import 'dotenv/config';
-const path = require('path');
-const express = require('express');
 import express from 'express';
 import logger from './config/logger.js';
 
