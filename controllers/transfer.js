@@ -12,3 +12,17 @@ import {
   handleError,
   unauthorized,
 } from '../helpers/responseHandler.js';
+
+export const transferMoney = catchAsync(async (req, res, next) => {
+  const amt = req.body.amount;
+  const recieveName = req.body.name;
+
+  // fetch details from user
+  if (!amt || !recieveName) {
+    return next(
+      handleError({
+        res,
+        err_msg: `Please provide name and amount for transaction`,
+      })
+    );
+  } 
