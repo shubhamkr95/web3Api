@@ -14,3 +14,24 @@ import {
 import tokenContract from '../abi/contract.js';
 import URL from '../utils/nodeUrl.js';
 import logger from '../config/logger.js';
+
+// JWT token creation
+const signToken = (id) => {
+  return jwt.sign({ id }, process.env.JWT_SECRET, {
+    expiresIn: process.env.JWT_EXPIRES_IN,
+  });
+};
+
+const createSendToken = (user, res) => {
+  const token = signToken(user.id);
+
+  res.cookie('token', token, {
+    httpOnly: true,
+  });
+
+  res.status('200').json({
+    status: 'success',
+    token,
+    welcome: `Welcome ${user.name}`,
+  });
+};
