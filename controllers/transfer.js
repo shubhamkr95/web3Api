@@ -42,3 +42,60 @@ export const transferMoney = catchAsync(async (req, res, next) => {
         })
       );
     }
+
+    // fetch details
+    const currUser = req.user;
+    const id = recieverUser[0].id;
+    const recieverName = recieverUser[0].name;
+    const senderName = await Users.findById({ _id: currUser.id });
+    const amount = details.amount;
+
+      // ===========
+    // web3
+
+    // transfer token
+    const customHttpProvider = new ethers.providers.JsonRpcProvider(URL);
+
+    //public key of sender
+    const senderDetails = await Users.findById({ _id: currUser.id });
+    const senderAddress = senderDetails.publicKey;
+
+    const signer1 = customHttpProvider.getSigner(senderAddress);
+
+    const tokenWithSigner = tokenContract.connect(signer1);
+
+    // getting reciever address
+    const recieverInfo = await Users.findById({ _id: id });
+    const recieverPublicKey = recieverInfo.publicKey;
+
+    const token = amount.toString();
+
+    // parsing amount to hex
+    const tokenAmount = ethers.utils.parseUnits(token, 18);
+
+    // sending transacion
+    const tx = await tokenWithSigner.transfer(recieverPublicKey, tokenAmount);
+    logger.info(`Sender transaction hash : ${tx.hash}`);
+
+    const recievedAmount = await tokenContract.balanceOf(recieverPublicKey);
+    const recievedParseAmount = ethers.utils.formatUnits(recievedAmount, 18);
+    logger.info(`Receiver token balance:  ${recievedParseAmount}`);
+
+    // update receiver amount
+    const recieved = {
+      tokenBalance: recievedParseAmount,
+    };
+    await Users.findOneAndUpdate({ _id: id }, { $set: recieved });
+
+    // update sender amount
+    const sendAmount = await tokenContract.balanceOf(senderAddress);
+    const sendParsedAmount = ethers.utils.formatUnits(sendAmount, 18);
+    logger.info(`sender balance: , ${sendParsedAmount}`);
+
+    const send = {
+      tokenBalance: sendParsedAmount,
+    };
+
+    await Users.findOneAndUpdate({ _id: currUser.id }, { $set: send });
+
+    // ==============
