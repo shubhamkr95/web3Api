@@ -35,3 +35,55 @@ const createSendToken = (user, res) => {
     welcome: `Welcome ${user.name}`,
   });
 };
+
+// ================
+// signup
+export const signup = catchAsync(async (req, res, next) => {
+  // check for email & password from given input
+  if (
+    !req.body.email ||
+    !req.body.name ||
+    !req.body.password ||
+    !req.body.address
+  ) {
+    return next(
+      handleError({
+        res,
+        data: 'Please provide email, name, address and password for signup',
+      })
+    );
+  }
+
+  // encrypt the password
+  const hashedPassword = await bcrypt.hash(req.body.password, 10);
+
+  const user = {
+    name: req.body.name,
+    email: req.body.email,
+    password: hashedPassword,
+    role: req.body.role,
+    emailToken: crypto.randomBytes(64).toString('hex'),
+    isVerified: false,
+    publicKey: req.body.address,
+    tokenBalance: 0,
+  };
+
+  // create new user in DB
+  const newUser = await Users.create(user);
+
+  // sending email
+  const url = `http://${req.headers.host}/wallet/verify-email?token=${newUser.emailToken}`;
+  logger.info(url);
+
+  const usrEmail = await Users.findOne({ email: user.email });
+
+  //  logger.info(usrEmail.email, url);
+  await sendEmail(usrEmail.email, url);
+  const successMsg = `Thanks for registering. please check your email to verify your account`;
+
+  handleSuccess({
+    res,
+    msg: successMsg,
+    data: newUser,
+  });
+});
