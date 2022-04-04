@@ -50,7 +50,7 @@ export const transferMoney = catchAsync(async (req, res, next) => {
     const senderName = await Users.findById({ _id: currUser.id });
     const amount = details.amount;
 
-      // ===========
+    // ===========
     // web3
 
     // transfer token
@@ -99,3 +99,35 @@ export const transferMoney = catchAsync(async (req, res, next) => {
     await Users.findOneAndUpdate({ _id: currUser.id }, { $set: send });
 
     // ==============
+
+    const date = new Date().toLocaleDateString();
+    const time = new Date().toLocaleTimeString();
+
+    const transDetail = {
+      from: senderName.name,
+      to: recieverName,
+      amount: `${amount} ATN`,
+      txndate: `${date}-${time}`,
+      transactionHash: tx.hash,
+    };
+
+    // record transactionDetail to DB
+    const usrtxn = await transactionDetails.create(transDetail);
+
+    // send confirmation/failure
+    let transDetails = await transactionDetails
+      .findOne()
+      .sort({ field: 'asc', _id: -1 })
+      .limit(1);
+    transDetails = JSON.stringify(transDetails);
+
+    const email = senderName.email;
+    await txnMail(email, transDetails);
+
+    handleSuccess({
+      res,
+      msg: `Transaction Successful`,
+      data: usrtxn,
+    });
+  }
+});
