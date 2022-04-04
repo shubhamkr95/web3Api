@@ -10,9 +10,11 @@ app.use(express.json());
 
 import authRoutes from './routes/auth.js';
 import allUser from './routes/user.js';
+import transaction from './routes/transaction.js';
 
 app.use('/wallet/', authRoutes);
 app.use('/wallet/', allUser);
+app.use('/wallet/', transaction);
 
 app.all('*', (req, res, next) => {
   next(
