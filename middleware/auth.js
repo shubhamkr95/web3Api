@@ -139,3 +139,44 @@ export const verifyEmail = catchAsync(async (req, res, next) => {
     data: `Email verified successfully`,
   });
 });
+
+// ====================
+// login
+export const login = catchAsync(async (req, res, next) => {
+  // check if email & password exist
+  const { email, password } = req.body;
+
+  if (!email || !password)
+    return next(
+      handleError({
+        res,
+        data: 'please enter email and password',
+      })
+    );
+
+  // check email exists in DB
+  const usrEmail = await Users.findOne({ email }).select('+password');
+
+  if (usrEmail === null) {
+    return next(
+      handleError({
+        res,
+        data: `Cannot find email`,
+      })
+    );
+  }
+
+  // check password
+  if (
+    !usrEmail.email ||
+    !(await bcrypt.compare(req.body.password, usrEmail.password))
+  ) {
+    return next(
+      handleError({
+        res,
+        data: 'Incorrect email or password',
+      })
+    );
+  }
+  const token = createSendToken(usrEmail, res);
+});
