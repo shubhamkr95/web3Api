@@ -1,7 +1,9 @@
-require('dotenv').config();
+import 'dotenv/config';
 
 // Ropsten url
-// module.exports.URL = process.env.ROPSTEN_API_KEY;
+// const URL = process.env.ROPSTEN_API_KEY;
 
 // local node url
-module.exports.URL = 'http://127.0.0.1:8545';
+const URL = 'http://127.0.0.1:8545';
+
+export default URL;
