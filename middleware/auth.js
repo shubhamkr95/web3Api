@@ -87,3 +87,55 @@ export const signup = catchAsync(async (req, res, next) => {
     data: newUser,
   });
 });
+
+// =================
+//verify email
+export const verifyEmail = catchAsync(async (req, res, next) => {
+  let user = await Users.findOne({ emailToken: req.query.token });
+
+  if (!user) {
+    return next(
+      handleError({
+        res,
+        data: `Token is invalid`,
+      })
+    );
+  }
+
+  const id = user._id;
+
+  //===============
+  // web3
+
+  const customHttpProvider = new ethers.providers.JsonRpcProvider(URL);
+
+  // sending token from contract owner to user after verified email
+  const signer = customHttpProvider.getSigner();
+
+  // 100 token will be provided to usr
+  const tokenAmount = ethers.utils.parseUnits('100', 18);
+  const tokenWithSigner = tokenContract.connect(signer);
+
+  //find public address from user from
+  const userInfo = await Users.findById({ _id: id });
+  const usrPublicKey = userInfo.publicKey;
+
+  const tx = await tokenWithSigner.transfer(usrPublicKey, tokenAmount);
+  logger.info(`Token transfer tx hash  ${tx.hash}`);
+
+  const amount = await tokenContract.balanceOf(usrPublicKey);
+  const parseAmount = ethers.utils.formatUnits(amount, 18);
+
+  user = {
+    emailToken: null,
+    isVerified: true,
+    tokenBalance: parseAmount,
+  };
+
+  await Users.findOneAndUpdate({ _id: id }, { $set: user });
+
+  handleSuccess({
+    res,
+    data: `Email verified successfully`,
+  });
+});
