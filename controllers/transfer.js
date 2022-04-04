@@ -25,4 +25,20 @@ export const transferMoney = catchAsync(async (req, res, next) => {
         err_msg: `Please provide name and amount for transaction`,
       })
     );
-  } 
+  } else {
+    const details = {
+      name: req.body.name,
+      amount: parseInt(amt),
+    };
+
+    // check reciever name in DB
+    const recieverUser = await Users.find(details);
+
+    if (recieverUser.length === 0) {
+      return next(
+        handleError({
+          res,
+          err_msg: `No user found with this name`,
+        })
+      );
+    }
