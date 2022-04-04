@@ -8,8 +8,6 @@ import dbConnect from './connections/database.js';
 const app = express();
 app.use(express.json());
 
-<<<<<<< HEAD
-=======
 import authRoutes from './routes/auth.js';
 import allUser from './routes/user.js';
 import transaction from './routes/transaction.js';
@@ -18,7 +16,6 @@ app.use('/wallet/', authRoutes);
 app.use('/wallet/', allUser);
 app.use('/wallet/', transaction);
 
->>>>>>> feature/token-transfer
 app.all('*', (req, res, next) => {
   next(
     handleError({
