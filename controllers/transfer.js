@@ -131,3 +131,18 @@ export const transferMoney = catchAsync(async (req, res, next) => {
     });
   }
 });
+
+// get all transaction admin
+export const transactionsDetail = catchAsync(async (req, res, next) => {
+  const user = await Users.findById(req.user.id);
+
+  if (user.role !== 'admin') return next(unauthorized(res));
+
+  const allTxn = await transactionDetails.find();
+
+  handleSuccess({
+    res,
+    msg: `Welcome admin`,
+    data: allTxn,
+  });
+});
