@@ -52,4 +52,6 @@ ROPSTEN_API_KEY="Get this key from Alchemy"
 
 - Get transaction alert on your email
 
-### Contract Address: [0xba871f6b449529d2ebef5beb9f8d51968b9919d3](https://ropsten.etherscan.io/tx/0x0e8dc0f62550c10ed11e975a28e9d5bb0cf03553674c4d37ceac9abe383651d1)
+### Deployed Address:
+
+[0xba871f6b449529d2ebef5beb9f8d51968b9919d3](https://ropsten.etherscan.io/tx/0x0e8dc0f62550c10ed11e975a28e9d5bb0cf03553674c4d37ceac9abe383651d1)
