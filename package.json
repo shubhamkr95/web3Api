@@ -1,0 +1,45 @@
+{
+  "name": "web3api",
+  "version": "1.0.0",
+  "description": "A wallet api with authentication and token transfer between users",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "nodemon server.js --ext js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shubhamkr95/web3Api.git"
+  },
+  "author": "Shubham",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/shubhamkr95/web3Api/issues"
+  },
+  "homepage": "https://github.com/shubhamkr95/web3Api#readme",
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "dotenv": "^16.0.0",
+    "ethers": "^5.6.2",
+    "express": "^4.17.3",
+    "jsonwebtoken": "^8.5.1",
+    "mongodb": "^4.4.1",
+    "mongoose": "^6.2.9",
+    "nodemailer": "^6.7.3",
+    "nodemailer-mailgun-transport": "^2.1.3",
+    "winston": "^3.6.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.12.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-import": "^2.25.4",
+    "eslint-plugin-jsx-a11y": "^6.5.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-react": "^7.29.4",
+    "nodemon": "^2.0.15",
+    "prettier": "^2.6.1"
+  }
+}
